@@ -9,16 +9,7 @@
 
 %define tde_pkg kftpgrabber
 %define tde_prefix /opt/trinity
-%define tde_bindir %{tde_prefix}/bin
-%define tde_datadir %{tde_prefix}/share
-%define tde_docdir %{tde_datadir}/doc
-%define tde_includedir %{tde_prefix}/include
-%define tde_libdir %{tde_prefix}/%{_lib}
-%define tde_mandir %{tde_datadir}/man
-%define tde_tdeappdir %{tde_datadir}/applications/tde
-%define tde_tdedocdir %{tde_docdir}/tde
-%define tde_tdeincludedir %{tde_includedir}/tde
-%define tde_tdelibdir %{tde_libdir}/trinity
+
 
 %undefine __brp_remove_la_files
 %define dont_remove_libtool_files 1
@@ -40,22 +31,17 @@ URL:            http://www.kftp.org/
 
 License:	GPLv2+
 
-#Vendor:		Trinity Desktop
-#Packager:	Francois Andriot <francois.andriot@free.fr>
 
 Source0:		https://mirror.ppa.trinitydesktop.org/trinity/releases/R%{tde_version}/main/applications/internet/%{tarball_name}-%{tde_version}%{?preversion:~%{preversion}}.tar.xz
 
 BuildSystem:    cmake
+
 BuildOption:    -DCMAKE_BUILD_TYPE="RelWithDebInfo"
-BuildOption:    -DCMAKE_SKIP_RPATH=OFF
-BuildOption:    -DCMAKE_SKIP_INSTALL_RPATH=OFF
-BuildOption:    -DCMAKE_BUILD_WITH_INSTALL_RPATH=ON
-BuildOption:    -DCMAKE_INSTALL_RPATH="%{tde_libdir}"
 BuildOption:    -DCMAKE_INSTALL_PREFIX=%{tde_prefix}
-BuildOption:    -DINCLUDE_INSTALL_DIR=%{tde_tdeincludedir}
-BuildOption:    -DLIB_INSTALL_DIR=%{tde_libdir}
-BuildOption:    -DSHARE_INSTALL_PREFIX=%{tde_datadir}
+BuildOption:    -DINCLUDE_INSTALL_DIR=%{tde_prefix}/include/tde
+BuildOption:    -DSHARE_INSTALL_PREFIX=%{tde_prefix}/share
 BuildOption:    -DWITH_ALL_OPTIONS=ON -DBUILD_ALL=ON
+BuildOption:    -DWITH_GCC_VISIBILITY=%{!?with_clang:ON}%{?with_clang:OFF}
 
 BuildRequires:	trinity-tdelibs-devel >= %{tde_version}
 BuildRequires:	trinity-tdebase-devel >= %{tde_version}
@@ -112,7 +98,7 @@ Requires: 	%{name} = %{?epoch:%{epoch}:}%{version}-%{release}
 
 %conf -p
 unset QTDIR QTINC QTDIR
-export PATH="%{tde_bindir}:${PATH}"
+export PATH="%{tde_prefix}/bin:${PATH}"
 
 
 %install -a
@@ -122,33 +108,33 @@ export PATH="%{tde_bindir}:${PATH}"
 %files -f %{tde_pkg}.lang
 %defattr(-,root,root,-)
 %doc AUTHORS COPYING README.md ChangeLog
-%{tde_bindir}/kftpgrabber
-%{tde_libdir}/libkftpinterfaces.so.0
-%{tde_libdir}/libkftpinterfaces.so.0.0.0
-%{tde_tdelibdir}/kftpimportplugin_filezilla3.la
-%{tde_tdelibdir}/kftpimportplugin_filezilla3.so
-%{tde_tdelibdir}/kftpimportplugin_gftp.la
-%{tde_tdelibdir}/kftpimportplugin_gftp.so
-%{tde_tdelibdir}/kftpimportplugin_kftp.la
-%{tde_tdelibdir}/kftpimportplugin_kftp.so
-%{tde_tdelibdir}/kftpimportplugin_ncftp.la
-%{tde_tdelibdir}/kftpimportplugin_ncftp.so
-%{tde_tdeappdir}/kftpgrabber.desktop
-%{tde_datadir}/apps/kftpgrabber/
-%{tde_datadir}/config.kcfg/kftpgrabber.kcfg
-%{tde_datadir}/icons/hicolor/*/apps/kftpgrabber.png
-%{tde_datadir}/services/kftpimportplugin_filezilla3.desktop
-%{tde_datadir}/services/kftpimportplugin_gftp.desktop
-%{tde_datadir}/services/kftpimportplugin_kftp.desktop
-%{tde_datadir}/services/kftpimportplugin_ncftp.desktop
-%{tde_datadir}/servicetypes/kftpbookmarkimportplugin.desktop
-%{tde_tdedocdir}/HTML/en/kftpgrabber/
-%{tde_mandir}/man1/kftpgrabber.1*
+%{tde_prefix}/bin/kftpgrabber
+%{tde_prefix}/%{_lib}/libkftpinterfaces.so.0
+%{tde_prefix}/%{_lib}/libkftpinterfaces.so.0.0.0
+%{tde_prefix}/%{_lib}/trinity/kftpimportplugin_filezilla3.la
+%{tde_prefix}/%{_lib}/trinity/kftpimportplugin_filezilla3.so
+%{tde_prefix}/%{_lib}/trinity/kftpimportplugin_gftp.la
+%{tde_prefix}/%{_lib}/trinity/kftpimportplugin_gftp.so
+%{tde_prefix}/%{_lib}/trinity/kftpimportplugin_kftp.la
+%{tde_prefix}/%{_lib}/trinity/kftpimportplugin_kftp.so
+%{tde_prefix}/%{_lib}/trinity/kftpimportplugin_ncftp.la
+%{tde_prefix}/%{_lib}/trinity/kftpimportplugin_ncftp.so
+%{tde_prefix}/share/applications/tde/kftpgrabber.desktop
+%{tde_prefix}/share/apps/kftpgrabber/
+%{tde_prefix}/share/config.kcfg/kftpgrabber.kcfg
+%{tde_prefix}/share/icons/hicolor/*/apps/kftpgrabber.png
+%{tde_prefix}/share/services/kftpimportplugin_filezilla3.desktop
+%{tde_prefix}/share/services/kftpimportplugin_gftp.desktop
+%{tde_prefix}/share/services/kftpimportplugin_kftp.desktop
+%{tde_prefix}/share/services/kftpimportplugin_ncftp.desktop
+%{tde_prefix}/share/servicetypes/kftpbookmarkimportplugin.desktop
+%{tde_prefix}/share/doc/tde/HTML/en/kftpgrabber/
+%{tde_prefix}/share/man/man1/kftpgrabber.1*
 
 
 %files devel
 %defattr(-,root,root,-)
-%{tde_tdeincludedir}/kftpgrabber/
-%{tde_libdir}/libkftpinterfaces.la
-%{tde_libdir}/libkftpinterfaces.so
+%{tde_prefix}/include/tde/kftpgrabber/
+%{tde_prefix}/%{_lib}/libkftpinterfaces.la
+%{tde_prefix}/%{_lib}/libkftpinterfaces.so
 
